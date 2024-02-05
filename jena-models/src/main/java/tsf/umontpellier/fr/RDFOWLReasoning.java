@@ -37,7 +37,7 @@ public class RDFOWLReasoning {
 		System.out.println("\n\n==========RDF Triples before inferences========================================\n");
 		printTriples(data);
 
-		System.out.println("\n\n==========RDF Triples after inferences=========================================\n");
+		System.out.println("\n\n==========RDF Inferred Triples ================================================\n");
 
 		printInferredTriples(infmodel, data);
 
@@ -45,7 +45,7 @@ public class RDFOWLReasoning {
 
 	}
 
-	private static void printInferredTriples(InfModel infModel, Model originalModel) {
+	static void printInferredTriples(InfModel infModel, Model originalModel) {
 		// Create a temporary model to store the inferred triples
 		Model temp = ModelFactory.createDefaultModel();
 		temp.add(infModel.difference(originalModel));
@@ -61,7 +61,7 @@ public class RDFOWLReasoning {
 		}
 	}
 
-	private static void printTriples(Model infModel) {
+	static void printTriples(Model infModel) {
 		StmtIterator iter = infModel.listStatements();
 
 		while (iter.hasNext()) {
@@ -74,7 +74,7 @@ public class RDFOWLReasoning {
 		}
 	}
 
-	private static boolean isRelevantStatement(Statement stmt) {
+	static boolean isRelevantStatement(Statement stmt) {
 		Resource subject = stmt.getSubject();
 		Property predicate = stmt.getPredicate();
 		RDFNode object = stmt.getObject();
