@@ -85,7 +85,7 @@ public class RDFOWLReasoning {
 
 		if (!SObanned.contains(subject.getNameSpace())) {
 
-			if (Pbanned.contains(predicate.getNameSpace())) {
+			if (!predicate.getLocalName().equals("sameAs") && Pbanned.contains(predicate.getNameSpace())) {
 
 				// Filter out statements with RDFS and OWL as predicates
 
