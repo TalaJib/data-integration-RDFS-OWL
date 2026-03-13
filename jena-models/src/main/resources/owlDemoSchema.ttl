@@ -21,3 +21,70 @@
              rdfs:domain owl:Thing ;
              rdfs:range :Employee .
 
+
+# classes
+:Patient a owl:Class ;
+    rdfs:subClassOf :Person .
+
+:MedicalCondition a owl:Class .
+
+:MedicalMeasurement a owl:Class .
+
+:Device a owl:Class .
+
+
+
+
+
+
+# Data Properties (Attributs)
+:hasID a owl:DatatypeProperty ;
+    rdfs:domain :Person ;
+    rdfs:range xsd:string .
+
+:hasName a owl:DatatypeProperty ;
+    rdfs:domain :Person ;
+    rdfs:range xsd:string .
+
+:hasAge a owl:DatatypeProperty ;
+    rdfs:domain :Person ;
+    rdfs:range xsd:integer .
+
+:heartRateBPM a owl:DatatypeProperty ;
+    rdfs:domain :Patient ;
+    rdfs:range xsd:integer .
+
+:stepsTakenToday a owl:DatatypeProperty ;
+    rdfs:domain :Patient ;
+    rdfs:range xsd:integer .
+
+:bloodSugarLevel a owl:DatatypeProperty ;
+    rdfs:domain :Patient ;
+    rdfs:range xsd:decimal .
+
+:bloodPressure a owl:DatatypeProperty ;
+    rdfs:domain :Patient ;
+    rdfs:range xsd:string .
+
+:medicationPrescribed a owl:DatatypeProperty ;
+    rdfs:domain :Patient ;
+    rdfs:range xsd:string .
+
+
+
+
+
+
+
+
+
+# Object Properties (Relations)
+:hasCondition a owl:ObjectProperty ;
+    rdfs:domain :Patient ;
+    rdfs:range :MedicalCondition .
+
+:usesDevice a owl:ObjectProperty ;
+    rdfs:domain :Patient ;
+    rdfs:range :Device .
+
+

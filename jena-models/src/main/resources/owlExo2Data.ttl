@@ -1,0 +1,8 @@
+@prefix movies: <http://www.lirmm.fr/ulliana/movies#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix dbp: <http://dbpedia.org/> .
+
+movies:m3 movies:directedBy dbp:Alfred_Hitchcock .
+movies:m2 movies:title "Vertigo" .
+movies:m1 rdf:type movies:Movie .
+movies:a1 movies:playsIn movies:m4 .

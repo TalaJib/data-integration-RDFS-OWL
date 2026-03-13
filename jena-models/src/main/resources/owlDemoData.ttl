@@ -8,3 +8,51 @@
  :Bob a  :Employee ;
          :worksAt  :XYZ_Corp ;
          :hasID "E456"^^xsd:string .
+
+
+# 1. Source JSON (Emily / ID: P12345)
+:Emily_JSON a :Patient ;
+    :hasID "P12345"^^xsd:string ;
+    :hasName "Emily"^^xsd:string ;
+    :heartRateBPM 77, 78 ;             # Deux mesures différentes (SmartRing et SmartWatch)
+    :stepsTakenToday 8300, 8500 ;     # Deux mesures différentes
+    :usesDevice :SmartRing, :SmartWatch .
+
+
+# données relationnelles
+:Alice_Rel a :Patient ;
+    :hasID "1"^^xsd:string ;
+    :hasName "Alice"^^xsd:string ;
+    :hasAge 30 ;
+    :hasCondition :Hypertension .
+
+:Bob_Rel a :Patient ;
+    :hasID "2"^^xsd:string ;
+    :hasName "Bob"^^xsd:string ;
+    :hasAge 25 ;
+    :hasCondition :Allergy .
+
+:Charlie_Rel a :Patient ;
+    :hasID "P12345"^^xsd:string ;
+    :hasName "Charlie"^^xsd:string ;
+    :hasAge 40 ;
+    :hasCondition :Diabetes .
+
+# données textuelleq (Jean Dupont / ID: JDP123)
+:Jean_Dupont a :Patient ;
+    :hasID "JDP123"^^xsd:string ;
+    :hasName "Jean Dupont"^^xsd:string ;
+    :hasAge 58 ;
+    :hasCondition :DiabetesType2, :Hypertension ;
+    :bloodPressure "140/90 mmHg"^^xsd:string ;
+    :bloodSugarLevel 180.0 ;
+    :medicationPrescribed "Metformine"^^xsd:string .
+
+# Definitions des conditions (pour le schéma)
+:Hypertension a :MedicalCondition .
+:Allergy a :MedicalCondition .
+:Diabetes a :MedicalCondition .
+:DiabetesType2 a :MedicalCondition .
+:SmartRing a :Device .
+:SmartWatch a :Device .
+
