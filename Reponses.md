@@ -91,4 +91,43 @@ movies:a1 rdf:type movies:Artist . (Car c'est un Actor et tout acteur est un art
 
 4.  Oui, le modèle contient bien les inférences.
 
-== Exercice 3:
+1. Ajouter une propriété symétrique :
+
+Propriété choisie : `:isFriendOf`
+Dans `owlDemoSchema.ttl`, nous avons défini `:isFriendOf` comme de type `owl:SymmetricProperty`.
+Dans `owlDemoData.ttl`, nous avons ajouté le fait : `:Alice :isFriendOf :Bob`.
+
+Inférence constatée : 
+En exécutant le raisonneur OWL (`RDFOWLReasoning.java`), le système déduit automatiquement que la relation inverse est vraie, générant le triplet inféré suivant :
+`http://example.org/Bob http://example.org/isFriendOf http://example.org/Alice`
+
+2. Ajouter une propriété fonctionnelle :
+
+Propriété choisie : `:hasPrimaryDoctor`
+Dans `owlDemoSchema.ttl`, nous avons défini `:hasPrimaryDoctor` comme de type `owl:FunctionalProperty`.
+Dans `owlDemoData.ttl`, nous avons déclaré que le patient `:Alice_Rel` a pour médecin principal `:DrSmith` et `:DrJohnSmith`.
+
+Inférence constatée :
+En exécutant le raisonneur OWL, le système déduit que puisqu'un patient ne peut avoir qu'un seul médecin principal (propriété fonctionnelle), les deux ressources `:DrSmith` et `:DrJohnSmith` doivent en réalité représenter la même entité. Il génère les triplets d'équivalence suivants :
+`http://example.org/DrSmith owl:sameAs http://example.org/DrJohnSmith`
+`http://example.org/DrJohnSmith owl:sameAs http://example.org/DrSmith`
+
+3. Ajouter une propriété inverse :
+
+Propriétés choisies : `:isTreatedBy` comme inverse de `:treats`.
+Dans `owlDemoSchema.ttl`, nous avons défini `:isTreatedBy` avec `owl:inverseOf :treats`.
+Dans `owlDemoData.ttl`, nous avons déclaré le fait : `:Charlie_Rel :isTreatedBy :DrHouse`.
+
+Inférence constatée : 
+En exécutant le raisonneur OWL, le système déduit automatiquement la relation dans l'autre sens. Il génère le triplet inverse suivant :
+`http://example.org/DrHouse http://example.org/treats http://example.org/Charlie_Rel`
+
+4. Ajouter une propriété transitive :
+
+Propriété choisie : `:isSuperiorOf`
+Dans `owlDemoSchema.ttl`, nous avons défini `:isSuperiorOf` comme `owl:TransitiveProperty`.
+Dans `owlDemoData.ttl`, nous avons créé une chaîne hiérarchique avec deux faits : `:AliceBoss :isSuperiorOf :BobManager` et `:BobManager :isSuperiorOf :CharlieWorker`.
+
+Inférence constatée :
+En exécutant le raisonneur OWL, le système déduit par transitivité que la relation s'étend du premier au dernier maillon de la chaîne. Il génère le triplet attendu :
+`http://example.org/AliceBoss http://example.org/isSuperiorOf http://example.org/CharlieWorker`

@@ -9,6 +9,7 @@
          :worksAt  :XYZ_Corp ;
          :hasID "E456"^^xsd:string .
 
+:Alice :isFriendOf :Bob .
 
 # 1. Source JSON (Emily / ID: P12345)
 :Emily_JSON a :Patient ;
@@ -24,7 +25,8 @@
     :hasID "1"^^xsd:string ;
     :hasName "Alice"^^xsd:string ;
     :hasAge 30 ;
-    :hasCondition :Hypertension .
+    :hasCondition :Hypertension ;
+    :hasPrimaryDoctor :DrSmith, :DrJohnSmith .
 
 :Bob_Rel a :Patient ;
     :hasID "2"^^xsd:string ;
@@ -36,7 +38,18 @@
     :hasID "P12345"^^xsd:string ;
     :hasName "Charlie"^^xsd:string ;
     :hasAge 40 ;
-    :hasCondition :Diabetes .
+    :hasCondition :Diabetes ;
+    :isTreatedBy :DrHouse .
+
+:DrHouse a :Doctor .
+
+:AliceBoss a :Employee ;
+           :isSuperiorOf :BobManager .
+           
+:BobManager a :Employee ;
+            :isSuperiorOf :CharlieWorker .
+            
+:CharlieWorker a :Employee .
 
 # données textuelleq (Jean Dupont / ID: JDP123)
 :Jean_Dupont a :Patient ;

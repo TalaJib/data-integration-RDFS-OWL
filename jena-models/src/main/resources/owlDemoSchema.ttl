@@ -21,12 +21,17 @@
              rdfs:domain owl:Thing ;
              rdfs:range :Employee .
 
+:isFriendOf a owl:SymmetricProperty ;
+            rdfs:domain :Person ;
+            rdfs:range :Person .
 
 # classes
 :Patient a owl:Class ;
     rdfs:subClassOf :Person .
 
 :MedicalCondition a owl:Class .
+
+:Doctor a owl:Class .
 
 :MedicalMeasurement a owl:Class .
 
@@ -87,4 +92,20 @@
     rdfs:domain :Patient ;
     rdfs:range :Device .
 
+:hasPrimaryDoctor a owl:FunctionalProperty, owl:ObjectProperty ;
+                  rdfs:domain :Patient ;
+                  rdfs:range :Doctor .
+
+:isTreatedBy a owl:ObjectProperty ;
+             owl:inverseOf :treats ;
+             rdfs:domain :Patient ;
+             rdfs:range :Doctor .
+             
+:treats a owl:ObjectProperty ;
+        rdfs:domain :Doctor ;
+        rdfs:range :Patient .
+
+:isSuperiorOf a owl:TransitiveProperty, owl:ObjectProperty ;
+              rdfs:domain :Employee ;
+              rdfs:range :Employee .
 
