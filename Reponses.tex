@@ -1,0 +1,221 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+
+\usepackage{geometry}
+\geometry{
+  a4paper,
+  left=25mm,
+  right=25mm,
+  top=25mm,
+  bottom=25mm
+}
+
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{sectsty}
+
+% Couleurs
+\definecolor{primary}{RGB}{43, 76, 126}
+\definecolor{secondary}{RGB}{86, 110, 157}
+\definecolor{codebg}{RGB}{245, 245, 245}
+\definecolor{codeborder}{RGB}{220, 220, 220}
+
+% Configuration des hyperliens
+\hypersetup{
+    colorlinks=true,
+    linkcolor=primary,
+    filecolor=magenta,      
+    urlcolor=primary,
+    pdftitle={Compte Rendu TP RDF/OWL},
+}
+
+% Configuration des titres
+\titleformat{\section}{\Large\bfseries\color{primary}}{}{0em}{}[\titlerule]
+\titleformat{\subsection}{\large\bfseries\color{secondary}}{\thesubsection}{1em}{}
+
+% Configuration de l'entête et pied de page
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\textcolor{gray}{TP Intégration de données - RDF/OWL}}
+\fancyhead[R]{\textcolor{gray}{AMMARI Reda \& ALJIBBAOUI Tala}}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{gray}\leaders\hrule height \headrulewidth\hfill}}
+
+% Configuration Listings pour le code Turtle
+\lstset{
+    backgroundcolor=\color{codebg},
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    captionpos=b,
+    commentstyle=\color{green!60!black},
+    keywordstyle=\color{blue},
+    stringstyle=\color{red},
+    frame=single,
+    rulecolor=\color{codeborder},
+    xleftmargin=10pt,
+    xrightmargin=10pt,
+    tabsize=2,
+    aboveskip=15pt,
+    belowskip=15pt
+}
+
+\begin{document}
+
+\begin{titlepage}
+    \centering
+    \vspace*{4cm}
+    
+    \rule{\textwidth}{1pt}\vspace{0.5cm}
+    {\huge \bfseries \textcolor{primary}{Compte Rendu de TP}} \\ \vspace{0.3cm}
+    {\Large \bfseries Modélisation et Intégration de données : RDF et OWL}
+    \vspace{0.5cm}\rule{\textwidth}{1pt}
+    
+    \vspace{2cm}
+    
+    {\Large \textbf{Auteurs :}} \\ \vspace{0.2cm}
+    {\large AMMARI Reda \\ ALJIBBAOUI Tala}
+    
+    \vspace{2cm}
+    
+    {\Large \textbf{Module :}} \\ \vspace{0.2cm}
+    {\large Traitement Sémantique des Données}
+    
+    \vfill
+    {\large Année Universitaire 2025/2026}
+    
+\end{titlepage}
+
+\newpage
+
+\section*{Exercice 2 : Focus sur les Connaissances : RDF-Schema et OWL}
+
+\subsection*{1. Identification des vocabulaires}
+
+\begin{itemize}
+    \item \textbf{rdf} : utilisé pour la structure de base (définir le type des objets).
+    \item \textbf{rdfs} : utilisé pour le schéma (créer des hiérarchies de classes et des règles sur les propriétés).
+    \item \textbf{owl} : utilisé pour les ontologies complexes (définir précisément la nature des propriétés).
+    \item \textbf{movies} : vocabulaire local spécifique au domaine du cinéma (films, acteurs, réalisateurs).
+    \item \textbf{dbp} : vocabulaire externe (DBpedia) utilisé pour identifier des personnes réelles comme Alfred Hitchcock.
+\end{itemize}
+
+\subsection*{2. Séparation des triplets}
+
+\textbf{Connaissances Ontologiques (Le Schéma) :}
+Ces triplets définissent les classes, les hiérarchies et les contraintes sur les propriétés (domaines et portées) que nous avons placés dans le fichier \texttt{owlExo2Schema.ttl}.
+
+\begin{lstlisting}[language=SQL]
+@prefix movies: <http://www.lirmm.fr/ulliana/movies#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+movies:directedBy rdfs:domain movies:Movie .
+movies:title rdfs:domain movies:Movie .
+movies:playsIn rdfs:domain movies:Actor .
+movies:playsIn rdfs:range movies:Movie .
+movies:Actor rdfs:subClassOf movies:Artist .
+movies:Director rdfs:subClassOf movies:Artist .
+movies:title rdf:type owl:DatatypeProperty .
+movies:directedBy rdfs:range movies:Director .
+\end{lstlisting}
+
+\newpage
+
+\textbf{Triplets représentant des données (Les Faits) :}
+Ces triplets décrivent des individus spécifiques (m1, m2, m3, a1) et leurs relations concrètes que nous avons placés dans le fichier \texttt{owlExo2Data.ttl}.
+
+\begin{lstlisting}[language=SQL]
+@prefix movies: <http://www.lirmm.fr/ulliana/movies#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix dbp: <http://dbpedia.org/> .
+
+movies:m3 movies:directedBy dbp:Alfred_Hitchcock .
+movies:m2 movies:title "Vertigo" .
+movies:m1 rdf:type movies:Movie .
+movies:a1 movies:playsIn movies:m4 .
+\end{lstlisting}
+
+\subsection*{3. Triplets inférés}
+
+En combinant le schéma (règles) et les données (faits), nous obtenons les nouvelles informations suivantes :
+
+\textbf{Inférences basées sur les Domaines (\texttt{rdfs:domain})}
+\begin{itemize}
+    \item \texttt{movies:m2 rdf:type movies:Movie .} (Car m2 possède un \texttt{title})
+    \item \texttt{movies:m3 rdf:type movies:Movie .} (Car m3 est sujet de \texttt{directedBy})
+    \item \texttt{movies:a1 rdf:type movies:Actor .} (Car a1 est sujet de \texttt{playsIn})
+\end{itemize}
+
+\textbf{Inférences basées sur les Portées (\texttt{rdfs:range})}
+\begin{itemize}
+    \item \texttt{dbp:Alfred\_Hitchcock rdf:type movies:Director .} (Car il est l'objet de \texttt{directedBy})
+    \item \texttt{movies:m4 rdf:type movies:Movie .} (Car il est l'objet de \texttt{playsIn})
+\end{itemize}
+
+\textbf{Inférences basées sur la Hiérarchie (\texttt{rdfs:subClassOf})}
+\begin{itemize}
+    \item \texttt{dbp:Alfred\_Hitchcock rdf:type movies:Artist .} (Car c'est un Director et tout réalisateur est un artiste)
+    \item \texttt{movies:a1 rdf:type movies:Artist .} (Car c'est un Actor et tout acteur est un artiste)
+\end{itemize}
+
+\subsection*{4. Vérification}
+Oui, en chargeant les données avec Jena, le modèle contient bien toutes les inférences listées ci-dessus.
+
+\newpage
+
+\section*{Exercice 3 : De RDF-Schema à OWL (Extensions du modèle)}
+
+\subsection*{1. Propriété Symétrique}
+\textbf{Propriété choisie :} \texttt{:isFriendOf} \\
+Dans \texttt{owlDemoSchema.ttl}, nous avons défini \texttt{:isFriendOf} comme de type \texttt{owl:SymmetricProperty}.
+Dans \texttt{owlDemoData.ttl}, nous avons ajouté le fait : \texttt{:Alice :isFriendOf :Bob}.
+
+\textbf{Inférence constatée :} \\
+En exécutant le raisonneur OWL (\texttt{RDFOWLReasoning.java}), le système déduit automatiquement que la relation inverse est vraie, générant le triplet inféré suivant :
+\begin{quote}
+\texttt{http://example.org/Bob http://example.org/isFriendOf http://example.org/Alice}
+\end{quote}
+
+\subsection*{2. Propriété Fonctionnelle}
+\textbf{Propriété choisie :} \texttt{:hasPrimaryDoctor} \\
+Dans \texttt{owlDemoSchema.ttl}, nous avons défini \texttt{:hasPrimaryDoctor} comme de type \texttt{owl:FunctionalProperty}.
+Dans \texttt{owlDemoData.ttl}, nous avons déclaré que le patient \texttt{:Alice\_Rel} a pour médecin principal \texttt{:DrSmith} et \texttt{:DrJohnSmith}.
+
+\textbf{Inférence constatée :} \\
+En exécutant le raisonneur OWL, le système déduit que puisqu'un patient ne peut avoir qu'un seul médecin principal (propriété fonctionnelle), les deux ressources \texttt{:DrSmith} et \texttt{:DrJohnSmith} doivent en réalité représenter la même entité. Il génère les triplets d'équivalence suivants :
+\begin{quote}
+\texttt{http://example.org/DrSmith owl:sameAs http://example.org/DrJohnSmith}\\
+\texttt{http://example.org/DrJohnSmith owl:sameAs http://example.org/DrSmith}
+\end{quote}
+
+\subsection*{3. Propriété Inverse}
+\textbf{Propriétés choisies :} \texttt{:isTreatedBy} comme inverse de \texttt{:treats}. \\
+Dans \texttt{owlDemoSchema.ttl}, nous avons défini \texttt{:isTreatedBy} avec \texttt{owl:inverseOf :treats}.
+Dans \texttt{owlDemoData.ttl}, nous avons déclaré le fait : \texttt{:Charlie\_Rel :isTreatedBy :DrHouse}.
+
+\textbf{Inférence constatée :} \\
+En exécutant le raisonneur OWL, le système déduit automatiquement la relation dans l'autre sens. Il génère le triplet inverse suivant :
+\begin{quote}
+\texttt{http://example.org/DrHouse http://example.org/treats http://example.org/Charlie\_Rel}
+\end{quote}
+
+\subsection*{4. Propriété Transitive}
+\textbf{Propriété choisie :} \texttt{:isSuperiorOf} \\
+Dans \texttt{owlDemoSchema.ttl}, nous avons défini \texttt{:isSuperiorOf} comme \texttt{owl:TransitiveProperty}.
+Dans \texttt{owlDemoData.ttl}, nous avons créé une chaîne hiérarchique avec deux faits : \texttt{:AliceBoss :isSuperiorOf :BobManager} et \texttt{:BobManager :isSuperiorOf :CharlieWorker}.
+
+\textbf{Inférence constatée :} \\
+En exécutant le raisonneur OWL, le système déduit par transitivité que la relation s'étend du premier au dernier maillon de la chaîne. Il génère le triplet attendu :
+\begin{quote}
+\texttt{http://example.org/AliceBoss http://example.org/isSuperiorOf \\ http://example.org/CharlieWorker}
+\end{quote}
+
+\end{document}
